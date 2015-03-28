@@ -1,6 +1,8 @@
 package org.bohao.core;
 
-import org.bohao.proto.KnockKnockProtocol;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,41 +15,39 @@ import java.net.Socket;
  * Created by bohao on 03-28-0028.
  */
 public class HttpServer {
-    public static void main(String[] args) throws IOException {
+    private static final Logger logger = LoggerFactory.getLogger(HttpServer.class);
 
-        if (args.length != 1) {
-            System.err.println("Usage: java KnockKnockServer <port number>");
-            System.exit(1);
-        }
+    private ServerSocket serverSocket;
 
-        int portNumber = Integer.parseInt(args[0]);
+    public HttpServer(int port) throws IOException {
+        serverSocket = new ServerSocket(port);
+    }
 
-        try (
-                ServerSocket serverSocket = new ServerSocket(portNumber);
-                Socket clientSocket = serverSocket.accept();
-                PrintWriter out =
-                        new PrintWriter(clientSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(clientSocket.getInputStream()))
-        ) {
+    public void start() {
+        while (true) {
+            try (
+                    Socket clientSocket = serverSocket.accept();
+                    PrintWriter out =
+                            new PrintWriter(clientSocket.getOutputStream(), true);
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(clientSocket.getInputStream()))
+            ) {
 
-            String inputLine, outputLine;
+                String inputLine, outputLine;
 
-            // Initiate conversation with client
-            KnockKnockProtocol kkp = new KnockKnockProtocol();
-            outputLine = kkp.processInput(null);
-            out.println(outputLine);
-
-            while ((inputLine = in.readLine()) != null) {
-                outputLine = kkp.processInput(inputLine);
-                out.println(outputLine);
-                if (outputLine.equals("Bye."))
-                    break;
+                // echo server now.
+                while ((inputLine = in.readLine()) != null) {
+                    outputLine = inputLine;
+                    out.println(outputLine);
+                    logger.debug("Get: " + outputLine);
+                }
+            } catch (IOException e) {
+                // here when disconnect
+                logger.info("Exception caught when trying to listen on port "
+                        + serverSocket.getInetAddress()
+                        + " or listening for a connection");
+                logger.info(e.getMessage());
             }
-        } catch (IOException e) {
-            System.out.println("Exception caught when trying to listen on port "
-                    + portNumber + " or listening for a connection");
-            System.out.println(e.getMessage());
         }
     }
 }
