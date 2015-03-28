@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 /**
  * Created by bohao on 03-28-0028.
  */
-public class HttpReader {
+public class HttpReader implements AutoCloseable {
     private static Logger logger = LoggerFactory.getLogger(HttpReader.class);
     private BufferedReader reader;
 
@@ -80,5 +80,10 @@ public class HttpReader {
         request.setMethod(strs[0]);
         request.setContextPath(strs[1]);
 
+    }
+
+    @Override
+    public void close() throws Exception {
+        reader.close();
     }
 }

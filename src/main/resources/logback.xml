@@ -40,9 +40,10 @@
 
     <!--myibatis log configure-->
     <!--<logger name="com.apache.ibatis" level="INFO"/>-->
+    <logger name="org.bohao.io.HttpReader" level="DEBUG"/>
 
     <!-- 日志输出级别 -->
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="STDOUT"/>
         <!--<appender-ref ref="FILE"/>-->
     </root>

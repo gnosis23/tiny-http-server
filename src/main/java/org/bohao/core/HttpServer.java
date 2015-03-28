@@ -1,13 +1,14 @@
 package org.bohao.core;
 
 
+import org.bohao.io.HttpReader;
+import org.bohao.io.HttpWriter;
+import org.bohao.proto.HttpRequest;
+import org.bohao.proto.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -27,21 +28,21 @@ public class HttpServer {
         while (true) {
             try (
                     Socket clientSocket = serverSocket.accept();
-                    PrintWriter out =
-                            new PrintWriter(clientSocket.getOutputStream(), true);
-                    BufferedReader in = new BufferedReader(
-                            new InputStreamReader(clientSocket.getInputStream()))
+                    HttpReader in = new HttpReader(clientSocket.getInputStream());
+                    HttpWriter out = new HttpWriter(clientSocket.getOutputStream())
             ) {
 
-                String inputLine, outputLine;
+                HttpRequest request = in.getRequest();
+                HttpResponse response = new HttpResponse();
+                NormalController controller = new NormalController();
 
-                // echo server now.
-                while ((inputLine = in.readLine()) != null) {
-                    outputLine = inputLine;
-                    out.println(outputLine);
-                    logger.debug("Get: " + outputLine);
-                }
-            } catch (IOException e) {
+                // TODO: post, get...
+                controller.doGet(request, response);
+
+
+                out.sendResponse(response);
+
+            } catch (Exception e) {
                 // here when disconnect
                 logger.info("Exception caught when trying to listen on port "
                         + serverSocket.getInetAddress()
