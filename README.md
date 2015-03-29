@@ -1,4 +1,5 @@
 ## todo
-- path resolver
+- *path resolver*
 - controllers based on annotations
+- multithreading support
 - template (html?)
