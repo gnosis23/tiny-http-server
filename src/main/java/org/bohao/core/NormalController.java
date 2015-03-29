@@ -1,5 +1,7 @@
 package org.bohao.core;
 
+import org.bohao.annotation.Controller;
+import org.bohao.annotation.RequestMapping;
 import org.bohao.proto.HttpRequest;
 import org.bohao.proto.HttpResponse;
 import org.bohao.utils.FileToStr;
@@ -12,9 +14,11 @@ import org.slf4j.LoggerFactory;
  * 实验性controller
  * Created by bohao on 03-29-0029.
  */
+@Controller(value = "/")
 public class NormalController {
     private static final Logger logger = LoggerFactory.getLogger(NormalController.class);
 
+    @RequestMapping(value = "/html")
     public void doGet(HttpRequest request, HttpResponse response) {
         response.setStatus(200);
 

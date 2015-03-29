@@ -36,9 +36,8 @@ public class HttpServer {
                 HttpResponse response = new HttpResponse();
                 NormalController controller = new NormalController();
 
-                // TODO: post, get...
-                controller.doGet(request, response);
-
+                ControlResolver resolver = new ControlResolver();
+                resolver.process(request, response);
 
                 out.sendResponse(response);
 
