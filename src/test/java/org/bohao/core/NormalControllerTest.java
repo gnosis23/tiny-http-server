@@ -16,7 +16,9 @@ public class NormalControllerTest {
     @Test
     public void testDoGet() throws Exception {
         HttpResponse response = new HttpResponse();
-        controller.doGet(null, response);
+        HttpRequest request = new HttpRequest();
+        request.setContextPath("/");
+        controller.doGet(request, response);
 
         assert response.getStatus() == 200;
         assert response.getHeader("Date") != null;
