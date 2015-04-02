@@ -36,22 +36,51 @@ public class ControlResolver {
                 }
             }
         } catch (ClassNotFoundException | IOException e) {
-            logger.error("controller resolver failed");
+            logger.info("controller resolver failed");
         }
+
+        NotFoundController defaultCtrl = new NotFoundController();
+        defaultCtrl.doGet(request, response);
     }
 
+    /**
+     * 在Controller中找RequestMapping方法，
+     * 取最长匹配
+     * 如果方法的参数不对，gua的越早越好
+     *
+     * @param myclass  controller类
+     * @param request  请求
+     * @param response 回复
+     * @return 是否找到process方法
+     */
     private boolean findMethod(Class myclass, HttpRequest request, HttpResponse response) {
+        Method best = null;
+        String bestLen = "";
         for (Method method : myclass.getDeclaredMethods()) {
             if (method.isAnnotationPresent(RequestMapping.class)) {
-                try {
-                    method.invoke(myclass.newInstance(), request, response);
-                    return true;
-                } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                    // die as early as possible.
-                    logger.error("request mapping args error! {}", myclass.getName());
-                    throw new RuntimeException("request mapping args error!");
+                RequestMapping mapping = method.getAnnotation(RequestMapping.class);
+                if (!request.getContextPath().startsWith(mapping.value()))
+                    continue;
+
+                if (best == null) {
+                    best = method;
+                    bestLen = mapping.value();
+                } else if (bestLen.length() < mapping.value().length()) {
+                    best = method;
+                    bestLen = mapping.value();
                 }
             }
+        }
+
+        try {
+            if (best != null) {
+                best.invoke(myclass.newInstance(), request, response);
+                return true;
+            }
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            // die as early as possible.
+            logger.error("request mapping args error! {}", myclass.getName());
+            throw new Error("request mapping args error!");
         }
         return false;
     }

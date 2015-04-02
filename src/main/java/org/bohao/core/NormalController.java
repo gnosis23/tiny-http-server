@@ -32,10 +32,25 @@ public class NormalController {
         DateTime twoDays = now.plusDays(2);
         response.setAttribute("Expires", TimeUtils.toHttpTime(twoDays));
 
-        // TODO: WOW SHIT
         logger.info(request.getContextPath());
         response.setContent(FileToStr.resolve("web-root" + request.getContextPath()));
+    }
 
+    @RequestMapping(value = "/html/form")
+    public void doGet2(HttpRequest request, HttpResponse response) {
+        response.setStatus(200);
 
+        DateTime now = new DateTime();
+        response.setAttribute("Date", TimeUtils.getServerTime());
+        response.setAttribute("Content-Type", "text/html");
+        response.setAttribute("Connection", "keep-alive");
+        response.setAttribute("Server", "Bengine");
+        response.setAttribute("Last-Modified", response.getHeader("Date"));
+
+        DateTime twoDays = now.plusDays(2);
+        response.setAttribute("Expires", TimeUtils.toHttpTime(twoDays));
+
+        logger.info(request.getContextPath());
+        response.setContent(FileToStr.resolve("web-root" + request.getContextPath()));
     }
 }

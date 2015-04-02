@@ -22,7 +22,16 @@ public class HttpWriter implements AutoCloseable {
 
     public void sendResponse(HttpResponse response) {
         // header
-        writer.println(String.format("HTTP/1.1 %d OK", response.getStatus()));
+        String desc = "";
+        switch (response.getStatus()) {
+            case 200:
+                desc = "OK";
+                break;
+            case 404:
+                desc = "Not Found";
+                break;
+        }
+        writer.println(String.format("HTTP/1.1 %d %S", response.getStatus(), desc));
 
         // attributes
         for (String name : response.getHeaderNames()) {

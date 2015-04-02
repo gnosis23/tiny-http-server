@@ -34,7 +34,6 @@ public class HttpServer {
 
                 HttpRequest request = in.getRequest();
                 HttpResponse response = new HttpResponse();
-                NormalController controller = new NormalController();
 
                 ControlResolver resolver = new ControlResolver();
                 resolver.process(request, response);

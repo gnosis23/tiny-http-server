@@ -8,8 +8,9 @@ import java.lang.annotation.Target;
 /**
  * Created by bohao on 03-29-0029.
  */
+
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequestMapping {
-    String value();
+    String value(); // url
 }

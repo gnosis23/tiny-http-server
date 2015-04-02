@@ -31,5 +31,17 @@ public class ControlResolverTest {
         resolver.process(request, response);
 
         assert "<!DOCTYPE".equals(response.getContent().substring(0, 9));
+        // path prefix test
+        assert response.getContent().contains("form");
+    }
+
+    @Test
+    public void testProcess3() throws Exception {
+        HttpResponse response = new HttpResponse();
+        HttpRequest request = new HttpRequest();
+        request.setContextPath("/hehe/");
+        resolver.process(request, response);
+
+        assert response.getStatus() == 404;
     }
 }
