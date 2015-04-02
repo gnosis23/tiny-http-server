@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * 实验性controller
  * Created by bohao on 03-29-0029.
  */
-@Controller(value = "/")
+@Controller(value = "/html")
 public class NormalController {
     private static final Logger logger = LoggerFactory.getLogger(NormalController.class);
 

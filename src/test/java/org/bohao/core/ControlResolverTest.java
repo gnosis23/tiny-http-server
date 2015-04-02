@@ -33,6 +33,11 @@ public class ControlResolverTest {
         assert "<!DOCTYPE".equals(response.getContent().substring(0, 9));
         // path prefix test
         assert response.getContent().contains("form");
+
+        response = new HttpResponse();
+        request.setContextPath("/html/nihao.html");
+        resolver.process(request, response);
+        assert response.getContent().contains("404");
     }
 
     @Test
@@ -43,5 +48,17 @@ public class ControlResolverTest {
         resolver.process(request, response);
 
         assert response.getStatus() == 404;
+    }
+
+    @Test
+    public void testProcess4() throws Exception {
+        HttpResponse response = new HttpResponse();
+        HttpRequest request = new HttpRequest();
+
+        // ÔÝÊ±ÕÒ²»µ½
+        request.setContextPath("/image/123.jpg");
+        resolver.process(request, response);
+
+        assert "image/jpeg".equals(response.getHeader("Content-Type"));
     }
 }

@@ -24,17 +24,30 @@ public class ControlResolver {
 
 
     public void process(HttpRequest request, HttpResponse response) {
+        Class best = null;
+        String bestLen = "";
         try {
             Iterable<Class> classes = getClasses("org.bohao.core");
             for (Class myclass : classes) {
                 if (myclass.isAnnotationPresent(Controller.class)) {
-                    logger.info("{}", myclass.getName());
-                    boolean ret = findMethod(myclass, request, response);
+                    String path = ((Controller) myclass.getAnnotation(Controller.class)).value();
+                    if (!request.getContextPath().startsWith(path))
+                        continue;
 
-                    if (ret)
-                        return;
+                    if (best == null || bestLen.length() < path.length()) {
+                        best = myclass;
+                        bestLen = path;
+                    }
                 }
             }
+
+            if (best != null) {
+                logger.info("{}", best.getName());
+                boolean ret = findMethod(best, request, response);
+                if (ret)
+                    return;
+            }
+
         } catch (ClassNotFoundException | IOException e) {
             logger.info("controller resolver failed");
         }
