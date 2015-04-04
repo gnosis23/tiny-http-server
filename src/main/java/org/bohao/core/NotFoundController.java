@@ -22,6 +22,6 @@ public class NotFoundController {
         DateTime twoDays = now.plusDays(2);
         response.setAttribute("Expires", TimeUtils.toHttpTime(twoDays));
 
-        response.setContent("<html>404</html>");
+        response.setContent("<html><h1>404</h1><img src='/image/404.png'></img></html>");
     }
 }

@@ -1,6 +1,7 @@
 package org.bohao.utils;
 
 import org.apache.commons.io.IOUtils;
+import org.bohao.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,6 @@ import java.io.InputStream;
  */
 public class FileToStr {
     private static final Logger logger = LoggerFactory.getLogger(FileToStr.class);
-    private static final String EMPTY = "<html>404</html>";
 
     public static String resolve(String path) {
         logger.info("resolving {}", path);
@@ -23,11 +23,9 @@ public class FileToStr {
             str = IOUtils.toString(stream);
         } catch (IOException | NullPointerException e) {
             logger.info("{} not exists", path);
-            str = null;
+            throw new ResourceNotFoundException(path + " not found");
         }
 
-        if (str == null)
-            str = EMPTY;
 
         return str;
     }
@@ -55,6 +53,7 @@ public class FileToStr {
             buffer.flush();
         } catch (IOException e) {
             logger.info("{} not exists", path);
+            throw new ResourceNotFoundException(path + "not found");
         }
 
         return buffer.toByteArray();

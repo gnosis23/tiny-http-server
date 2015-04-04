@@ -37,7 +37,7 @@ public class ControlResolverTest {
         response = new HttpResponse();
         request.setContextPath("/html/nihao.html");
         resolver.process(request, response);
-        assert response.getContent().contains("404");
+        assert response.getStatus() == 404;
     }
 
     @Test
@@ -59,6 +59,6 @@ public class ControlResolverTest {
         request.setContextPath("/image/123.jpg");
         resolver.process(request, response);
 
-        assert "text/html".equals(response.getHeader("Content-Type"));
+        assert response.getStatus() == 404;
     }
 }

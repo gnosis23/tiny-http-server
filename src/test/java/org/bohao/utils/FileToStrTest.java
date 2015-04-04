@@ -1,5 +1,6 @@
 package org.bohao.utils;
 
+import org.bohao.exception.ResourceNotFoundException;
 import org.junit.Test;
 
 /**
@@ -14,7 +15,11 @@ public class FileToStrTest {
         assert str != null;
         assert str.substring(0, 2).equals("<!");
 
-        str = FileToStr.resolve("web-root/html/s.html");
-        assert str.equals("<html>404</html>");
+    }
+
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void testException() throws Exception {
+        FileToStr.resolve("web-root/html/s.html");
     }
 }

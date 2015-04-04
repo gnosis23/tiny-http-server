@@ -2,6 +2,7 @@ package org.bohao.core;
 
 import org.bohao.annotation.Controller;
 import org.bohao.annotation.RequestMapping;
+import org.bohao.exception.ResourceNotFoundException;
 import org.bohao.proto.HttpRequest;
 import org.bohao.proto.HttpResponse;
 import org.slf4j.Logger;
@@ -48,10 +49,12 @@ public class ControlResolver {
                     return;
             }
 
+        } catch (ResourceNotFoundException e) {
+            logger.warn(e.getMessage());
         } catch (Exception e) {
             // TODO: 处理中出现的错误现在都抛出404
             // 可以考虑下其他方法
-            logger.warn("controller resolver failed, {}", request.getContextPath());
+            logger.warn("failed for unkown reasons, {}", request.getContextPath());
         }
 
         NotFoundController defaultCtrl = new NotFoundController();
@@ -92,7 +95,10 @@ public class ControlResolver {
                 best.invoke(myclass.newInstance(), request, response);
                 return true;
             }
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+        } catch (InvocationTargetException e) {
+            // FileToStr.image 会触发到此处
+            throw new ResourceNotFoundException(request.getContextPath() + " not found");
+        } catch (IllegalAccessException | InstantiationException e) {
             logger.info("request mapping args error! {}", myclass.getName());
         }
         return false;
