@@ -11,6 +11,7 @@ public class HttpResponse {
     private Map<String, String> headers = new HashMap<>();
     private String content;
     private int status;
+    private byte[] binaryData;
 
     public HttpResponse() {
     }
@@ -42,5 +43,13 @@ public class HttpResponse {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public byte[] getBinaryData() {
+        return binaryData;
+    }
+
+    public void setBinaryData(byte[] binaryData) {
+        this.binaryData = binaryData;
     }
 }

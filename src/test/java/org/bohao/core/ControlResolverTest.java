@@ -59,6 +59,6 @@ public class ControlResolverTest {
         request.setContextPath("/image/123.jpg");
         resolver.process(request, response);
 
-        assert "image/jpeg".equals(response.getHeader("Content-Type"));
+        assert "text/html".equals(response.getHeader("Content-Type"));
     }
 }

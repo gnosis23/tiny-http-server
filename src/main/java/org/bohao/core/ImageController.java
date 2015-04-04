@@ -12,7 +12,7 @@ import org.joda.time.DateTime;
  * Created by bohao on 04-02-0002.
  */
 @Controller(value = "/image")
-public class JpgController {
+public class ImageController {
 
     @RequestMapping(value = "/image")
     public void doGet(HttpRequest request, HttpResponse response) {
@@ -29,7 +29,6 @@ public class JpgController {
         DateTime twoDays = now.plusDays(2);
         response.setAttribute("Expires", TimeUtils.toHttpTime(twoDays));
 
-        // TODO: 看来对图片String类型不行
-        response.setContent(FileToStr.resolve("web-root" + request.getContextPath()));
+        response.setBinaryData(FileToStr.image("web-root" + request.getContextPath()));
     }
 }

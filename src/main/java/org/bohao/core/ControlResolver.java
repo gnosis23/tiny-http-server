@@ -48,8 +48,10 @@ public class ControlResolver {
                     return;
             }
 
-        } catch (ClassNotFoundException | IOException e) {
-            logger.info("controller resolver failed");
+        } catch (Exception e) {
+            // TODO: 处理中出现的错误现在都抛出404
+            // 可以考虑下其他方法
+            logger.warn("controller resolver failed, {}", request.getContextPath());
         }
 
         NotFoundController defaultCtrl = new NotFoundController();
@@ -91,9 +93,7 @@ public class ControlResolver {
                 return true;
             }
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            // die as early as possible.
-            logger.error("request mapping args error! {}", myclass.getName());
-            throw new Error("request mapping args error!");
+            logger.info("request mapping args error! {}", myclass.getName());
         }
         return false;
     }

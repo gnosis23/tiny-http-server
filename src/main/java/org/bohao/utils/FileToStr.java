@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -29,5 +30,33 @@ public class FileToStr {
             str = EMPTY;
 
         return str;
+    }
+
+    /**
+     * 读取图片二进制信息
+     *
+     * @param path 图片路径
+     * @return 返回图片字节或抛出IOException
+     */
+    public static byte[] image(String path) {
+        InputStream stream = FileToStr.class.getClassLoader().getResourceAsStream(path);
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+        int nRead;
+        int len = 1024 * 1024; // 1 MB
+        byte[] data = new byte[len];
+        try {
+            // InputStream -> Byte[]
+            // code from: http://stackoverflow.com/questions/1264709/convert-inputstream-to-byte-array-in-java
+            //
+            while ((nRead = stream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            buffer.flush();
+        } catch (IOException e) {
+            logger.info("{} not exists", path);
+        }
+
+        return buffer.toByteArray();
     }
 }
