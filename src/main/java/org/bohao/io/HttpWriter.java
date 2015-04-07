@@ -52,6 +52,7 @@ public class HttpWriter implements AutoCloseable {
                     break;
                 case "image/png":
                 case "image/jpeg":
+                case "application/json":
                     writer.write(response.getBinaryData());
                     break;
             }
