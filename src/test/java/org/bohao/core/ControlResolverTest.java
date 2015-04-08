@@ -55,10 +55,23 @@ public class ControlResolverTest {
         HttpResponse response = new HttpResponse();
         HttpRequest request = new HttpRequest();
 
-        // ‘› ±’“≤ªµΩ
+
         request.setContextPath("/image/123.jpg");
         resolver.process(request, response);
 
         assert response.getStatus() == 404;
+    }
+
+    // /html/get
+    @Test
+    public void testProcess5() throws Exception {
+        HttpResponse response = new HttpResponse();
+        HttpRequest request = new HttpRequest();
+
+
+        request.setContextPath("/html/get?firstname=%E5%92%8C%E5%B0%9A&lastname=%E8%80%81%E5%A4%B4");
+        resolver.process(request, response);
+
+        assert "get".equals(response.getHeader("Btag"));
     }
 }
