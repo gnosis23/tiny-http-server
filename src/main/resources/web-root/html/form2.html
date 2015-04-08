@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+</head>
 <body>
 
-<form>
-    <input type="radio" name="sex" value="male" checked>Male
+<form action="/html/post" method="post">
+    <label>
+        First name:<br>
+        <input type="text" name="firstname">
+    </label>
     <br>
-    <input type="radio" name="sex" value="female">Female
+    <label>
+        Last name:<br>
+        <input type="text" name="lastname">
+    </label>
+    <br>
+    <input type="submit" value="Submit">
 </form>
 
 </body>

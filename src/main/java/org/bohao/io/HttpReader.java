@@ -39,7 +39,16 @@ public class HttpReader implements AutoCloseable {
                 parseAttribute(request, line);
             }
 
-            // TODO: header body
+            // content
+            // 0 to more lines
+            // 分隔符先不算，因为只用到了一行。
+            StringBuilder sb = new StringBuilder();
+            // FIXME 这里挂了，请测试
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            request.setContent(sb.toString());
+
         } catch (HttpException | IOException e) {
             logger.error(e.getMessage());
         }

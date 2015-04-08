@@ -20,8 +20,17 @@ public class UrlTools {
             return params;
         }
 
-        String str = path.substring(index + 1);
-        for (String p : str.split("&")) {
+        getParams(path.substring(index + 1), encode, params);
+        return params;
+    }
+
+    /**
+     * @param sequences eg: a=b&c=xxx
+     * @param encode    eg: UTF-8
+     * @param params    map
+     */
+    private static void getParams(String sequences, String encode, Map<String, String> params) {
+        for (String p : sequences.split("&")) {
             String[] temps = p.split("=");
             if (temps.length == 1) {
                 params.put(temps[0], "");
@@ -33,10 +42,19 @@ public class UrlTools {
                 }
             }
         }
-        return params;
     }
 
     public static Map<String, String> parse(String path) {
         return parse(path, "UTF-8");
+    }
+
+    public static Map<String, String> parsePost(String path) {
+        return parsePost(path, "UTF-8");
+    }
+
+    private static Map<String, String> parsePost(String path, String encode) {
+        Map<String, String> params = new HashMap<>();
+        getParams(path, encode, params);
+        return params;
     }
 }

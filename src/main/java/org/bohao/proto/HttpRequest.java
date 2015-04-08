@@ -10,6 +10,7 @@ public class HttpRequest {
     private String contextPath = "/";
     private String method;
     private Map<String, String> headers = new HashMap<>();
+    private String content;
 
     public HttpRequest() {
 
@@ -47,5 +48,16 @@ public class HttpRequest {
 
     public String getMethod() {
         return method;
+    }
+
+    /**
+     * @return 一般post请求的内容
+     */
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

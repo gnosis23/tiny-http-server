@@ -24,6 +24,13 @@ public class UrlToolsTest {
     }
 
     @Test
+    public void testParse0() throws Exception {
+        Map<String, String> maps = UrlTools.parse("dlaf;dkafjladkfj");
+
+        assert maps.size() == 0;
+    }
+
+    @Test
     public void testParse2() throws Exception {
         Map<String, String> maps = UrlTools.parse("/html/get?firstname=&lastname=");
 
@@ -41,5 +48,28 @@ public class UrlToolsTest {
         assert "老头".equals(maps.get("lastname"));
     }
 
+    @Test
+    public void testParse4() throws Exception {
+        // 使用UTF-8编码值，左边的值用英语
+        Map<String, String> maps = UrlTools.parsePost("firstname=%E5%92%8C%E5%B0%9A&lastname=%E8%80%81%E5%A4%B4");
+
+        assert "和尚".equals(maps.get("firstname"));
+        assert "老头".equals(maps.get("lastname"));
+    }
+
+    @Test
+    public void testParse5() throws Exception {
+
+        Map<String, String> maps = UrlTools.parsePost("firstname=&lastname=123");
+
+        assert "".equals(maps.get("firstname"));
+        assert "123".equals(maps.get("lastname"));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testParse6() throws Exception {
+        Map<String, String> maps = UrlTools.parse("/html/get?firstname=%E5%92%8C%E5%B0%9A&lastname=%E8%80%81%E5%A4%B4",
+                "sawadika");
+    }
 
 }
