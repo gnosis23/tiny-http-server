@@ -74,4 +74,18 @@ public class ControlResolverTest {
 
         assert "get".equals(response.getHeader("Btag"));
     }
+
+    // /html/post
+    @Test
+    public void testProcess6() throws Exception {
+        HttpResponse response = new HttpResponse();
+        HttpRequest request = new HttpRequest();
+
+
+        request.setContextPath("/html/post");
+        request.setContent("a=b");
+        resolver.process(request, response);
+
+        assert "post".equals(response.getHeader("Btag"));
+    }
 }

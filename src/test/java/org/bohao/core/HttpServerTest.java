@@ -10,7 +10,7 @@ public class HttpServerTest {
 
     @Before
     public void setUp() throws Exception {
-        server = new HttpServer(22222);
+        server = new HttpServer(22223);
     }
 
     @Test

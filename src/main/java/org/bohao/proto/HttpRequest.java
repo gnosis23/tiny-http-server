@@ -10,7 +10,7 @@ public class HttpRequest {
     private String contextPath = "/";
     private String method;
     private Map<String, String> headers = new HashMap<>();
-    private String content;
+    private String content = "";
 
     public HttpRequest() {
 
