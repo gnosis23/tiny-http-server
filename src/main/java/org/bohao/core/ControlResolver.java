@@ -77,7 +77,11 @@ public class ControlResolver {
         for (Method method : myclass.getDeclaredMethods()) {
             if (method.isAnnotationPresent(RequestMapping.class)) {
                 RequestMapping mapping = method.getAnnotation(RequestMapping.class);
+
                 if (!request.getContextPath().startsWith(mapping.value()))
+                    continue;
+
+                if (!request.getMethod().toUpperCase().equals(mapping.method().toUpperCase()))
                     continue;
 
                 if (best == null) {

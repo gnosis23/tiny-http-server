@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class HttpRequest {
     private String contextPath = "/";
-    private String method;
+    private String method = "GET";
     private Map<String, String> headers = new HashMap<>();
     private String content = "";
 

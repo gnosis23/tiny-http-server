@@ -84,6 +84,7 @@ public class ControlResolverTest {
 
         request.setContextPath("/html/post");
         request.setContent("a=b");
+        request.setMethod("POST");
         resolver.process(request, response);
 
         assert "post".equals(response.getHeader("Btag"));
