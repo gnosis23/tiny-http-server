@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        function send(str) {
+            var word = {
+                "prefix": "'" + str + "'"
+            };
+
+            $.ajax({
+                url: '/json/suggestion',
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    $('#output').html(data.msg);
+                },
+                data: word
+            });
+        }
+    </script>
+</head>
+<body>
+
+<h3>Start typing a name in the input field below:</h3>
+
+<form action="">
+    <label for="txt1">First name: </label><input type="text" id="txt1" onkeyup="send(this.value)"/>
+</form>
+<p>Suggestions: <span id="txtHint"></span></p>
+<input type="text" id="output" value="empty"/>
+
+</body>
+</html>

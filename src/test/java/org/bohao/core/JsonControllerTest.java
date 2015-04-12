@@ -29,4 +29,17 @@ public class JsonControllerTest {
         assert "application/json".equals(response.getHeader("Content-Type"));
         assert response.getBinaryData().length > 0;
     }
+
+    @Test
+    public void testDoPost() throws Exception {
+        HttpResponse response = new HttpResponse();
+        HttpRequest request = new HttpRequest();
+
+        // ÔÝÊ±ÕÒ²»µ½
+        request.setContent("prefix:\"a\"");
+        jsonController.doPost(request, response);
+
+        assert "application/json".equals(response.getHeader("Content-Type"));
+        assert response.getBinaryData().length > 0;
+    }
 }

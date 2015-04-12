@@ -101,7 +101,7 @@ public class ControlResolver {
             }
         } catch (InvocationTargetException e) {
             // FileToStr.image 会触发到此处
-            throw new ResourceNotFoundException(request.getContextPath() + " not found");
+            throw new ResourceNotFoundException(request.getContextPath() + " not found, " + e.getTargetException());
         } catch (IllegalAccessException | InstantiationException e) {
             logger.info("request mapping args error! {}", myclass.getName());
         }
