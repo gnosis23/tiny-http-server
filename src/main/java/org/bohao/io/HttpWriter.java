@@ -1,6 +1,8 @@
 package org.bohao.io;
 
+import org.bohao.entt.Cookie;
 import org.bohao.proto.HttpResponse;
+import org.bohao.utils.TimeUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -44,6 +46,10 @@ public class HttpWriter implements AutoCloseable {
             for (String name : response.getHeaderNames()) {
                 writer.write(encodingStringWithUtf8(String.format("%s: %s\n", name, response.getHeader(name))));
             }
+
+            for (Cookie cookie : response.getCookies()) {
+                writer.write(encodingStringWithUtf8(print(cookie)));
+            }
             writer.write(encodingStringWithUtf8("\n"));
 
             switch (response.getHeader("Content-Type")) {
@@ -64,12 +70,22 @@ public class HttpWriter implements AutoCloseable {
     }
 
     /**
-     * 不想也一大堆字符
      *
      * @param str str -> bytes
      * @return bytes
      */
     private byte[] encodingStringWithUtf8(String str) {
         return str.getBytes(Charset.forName("UTF-8"));
+    }
+
+    /**
+     * only print name and value by now.
+     *
+     * @param cookie .
+     * @return print cookie
+     */
+    protected String print(Cookie cookie) {
+        return String.format("Set-Cookie: %s=%s; expires=%s\r\n", cookie.getName(),
+                cookie.getValue(), TimeUtils.nDaysLater(1));
     }
 }

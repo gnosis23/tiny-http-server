@@ -1,8 +1,8 @@
 package org.bohao.proto;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import org.bohao.entt.Cookie;
+
+import java.util.*;
 
 /**
  * Created by bohao on 03-28-0028.
@@ -12,6 +12,7 @@ public class HttpResponse {
     private String content;
     private int status;
     private byte[] binaryData;
+    private List<Cookie> cookies = new ArrayList<>();
 
     public HttpResponse() {
     }
@@ -51,5 +52,13 @@ public class HttpResponse {
 
     public void setBinaryData(byte[] binaryData) {
         this.binaryData = binaryData;
+    }
+
+    public void addCookie(Cookie cookie) {
+        cookies.add(cookie);
+    }
+
+    public List<Cookie> getCookies() {
+        return cookies;
     }
 }

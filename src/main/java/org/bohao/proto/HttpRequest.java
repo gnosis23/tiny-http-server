@@ -1,6 +1,9 @@
 package org.bohao.proto;
 
+import org.bohao.entt.Cookie;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,6 +14,7 @@ public class HttpRequest {
     private String method = "GET";
     private Map<String, String> headers = new HashMap<>();
     private String content = "";
+    private List<Cookie> cookies;
 
     public HttpRequest() {
 
@@ -59,5 +63,13 @@ public class HttpRequest {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setCookies(List<Cookie> cookies) {
+        this.cookies = cookies;
+    }
+
+    public List<Cookie> getCookies() {
+        return cookies;
     }
 }

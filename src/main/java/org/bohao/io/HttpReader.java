@@ -1,5 +1,6 @@
 package org.bohao.io;
 
+import org.bohao.entt.Cookie;
 import org.bohao.exception.HttpException;
 import org.bohao.proto.HttpRequest;
 import org.slf4j.Logger;
@@ -9,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bohao on 03-28-0028.
@@ -26,6 +29,8 @@ public class HttpReader implements AutoCloseable {
         try {
             String line;
             boolean firstLine = true;
+            List<Cookie> cookies = new ArrayList<>();
+
             while ((line = reader.readLine()) != null) {
                 if (firstLine) {
                     firstLine = false;
@@ -35,9 +40,15 @@ public class HttpReader implements AutoCloseable {
 
                 if (line.equals(""))
                     break;
-
-                parseAttribute(request, line);
+                else if (line.startsWith("Cookie:")) {
+                    Cookie cookie = parseCookie(line);
+                    cookies.add(cookie);
+                } else {
+                    parseAttribute(request, line);
+                }
             }
+
+            request.setCookies(cookies);
 
             // buffered reader 不会在另一边没关闭的时候结束，所以会挂着等待
             // 那么我们怎么能断定已经读到最后了呢？
@@ -52,6 +63,7 @@ public class HttpReader implements AutoCloseable {
 
         } catch (HttpException | IOException e) {
             logger.error(e.getMessage());
+            throw new RuntimeException(e);
         }
 
         return request;
@@ -95,5 +107,57 @@ public class HttpReader implements AutoCloseable {
     @Override
     public void close() throws Exception {
         reader.close();
+    }
+
+    /**
+     * parse cookie
+     * eg: Cookie: $Version=1; Customer=WILE_E_COYOTE; $Path=/acme
+     * version, path
+     *
+     * @param line starts with "Cookie: "
+     * @return cookie
+     */
+    protected Cookie parseCookie(String line) throws HttpException {
+        if (!line.startsWith("Cookie:")) {
+            throw new HttpException("not a cookie");
+        }
+
+        Cookie cookie = new Cookie();
+
+        String tokens = line.substring(8);
+        for (String token : tokens.split(";")) {
+            String[] t = token.trim().split("=");
+
+            switch (t[0].trim()) {
+                case "$Version":
+                case "Version":
+                    cookie.setVersion(Integer.parseInt(t[1]));
+                    break;
+                case "$Path":
+                case "Path":
+                    cookie.setPath(t[1]);
+                    break;
+                case "$Domain":
+                case "Domain":
+                    cookie.setDomain(t[1]);
+                    break;
+                case "$Max-Age":
+                case "Max-Age":
+                    cookie.setMaxAge(Integer.parseInt(t[1]));
+                    break;
+                case "$Comment":
+                case "Comment":
+                    cookie.setComment(t[1]);
+                    break;
+                default:
+                    if (t[0].startsWith("$"))
+                        throw new HttpException("attribute error");
+
+                    cookie.setName(t[0]);
+                    cookie.setValue(t[1]);
+            }
+        }
+
+        return cookie;
     }
 }

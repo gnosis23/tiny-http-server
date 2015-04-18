@@ -1,12 +1,15 @@
 package org.bohao.io;
 
+import org.bohao.entt.Cookie;
 import org.bohao.proto.HttpRequest;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class HttpReaderTest {
     private HttpReader reader;
@@ -79,5 +82,66 @@ public class HttpReaderTest {
         assert request.getContextPath().equals("/");
 
         assert "firstname=wang&lastname=nima".equals(request.getContent());
+    }
+
+    @Test
+    public void testCookie() throws Exception {
+        InputStream stream = new ByteArrayInputStream((
+                ""
+        ).getBytes(StandardCharsets.UTF_8));
+        reader = new HttpReader(stream);
+
+        Cookie cookie = reader.parseCookie("Cookie: $Version=1; Customer=WILE_E_COYOTE; $Path=/acme");
+
+        Assert.assertEquals(cookie.getVersion(), 1);
+        Assert.assertEquals(cookie.getPath(), "/acme");
+        Assert.assertEquals(cookie.getName(), "Customer");
+        Assert.assertEquals(cookie.getValue(), "WILE_E_COYOTE");
+    }
+
+    @Test
+    public void testCookie2() throws Exception {
+        InputStream stream = new ByteArrayInputStream((
+                "POST / HTTP/1.1\r\n" +
+                        "Host: localhost:22222\r\n" +
+                        "Accept-Encoding: gzip, deflate\r\n" +
+                        "Cookie: $Version=1; Customer=WILE_E_COYOTE; $Path=/acme\r\n" +
+                        "Cookie: $Version=1; Gta=Grand Theft Auto; $Path=/shanghai\r\n" +
+                        "\r\n"
+        ).getBytes(StandardCharsets.UTF_8));
+        reader = new HttpReader(stream);
+
+        HttpRequest request = reader.getRequest();
+        List<Cookie> cookies = request.getCookies();
+
+        Assert.assertTrue(cookies.size() == 2);
+        Cookie c1 = cookies.get(0);
+        Cookie c2 = cookies.get(1);
+
+        Assert.assertEquals(c1.getVersion(), 1);
+        Assert.assertEquals(c1.getPath(), "/acme");
+        Assert.assertEquals(c1.getName(), "Customer");
+        Assert.assertEquals(c1.getValue(), "WILE_E_COYOTE");
+
+        Assert.assertEquals(c2.getVersion(), 1);
+        Assert.assertEquals(c2.getPath(), "/shanghai");
+        Assert.assertEquals(c2.getName(), "Gta");
+        Assert.assertEquals(c2.getValue(), "Grand Theft Auto");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testCookie3() throws Exception {
+        InputStream stream = new ByteArrayInputStream((
+                "POST / HTTP/1.1\r\n" +
+                        "Host: localhost:22222\r\n" +
+                        "Accept-Encoding: gzip, deflate\r\n" +
+                        "Cookie: $Sina=1; Customer=WILE_E_COYOTE; $Path=/acme\r\n" +
+                        "\r\n"
+        ).getBytes(StandardCharsets.UTF_8));
+        reader = new HttpReader(stream);
+
+        HttpRequest request = reader.getRequest();
+
+        //Assert.assertNull(request.getCookies());
     }
 }

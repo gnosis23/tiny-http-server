@@ -19,6 +19,10 @@ public class TimeUtils {
         return RFC1123_DATE_TIME_FORMATTER.print(new DateTime());
     }
 
+    public static String nDaysLater(int n) {
+        return RFC1123_DATE_TIME_FORMATTER.print(new DateTime().plusDays(n));
+    }
+
     public static String toHttpTime(DateTime time) {
         return RFC1123_DATE_TIME_FORMATTER.print(time);
     }
