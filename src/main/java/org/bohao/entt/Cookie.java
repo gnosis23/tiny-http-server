@@ -93,4 +93,18 @@ public class Cookie {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Cookie{" +
+                "comment='" + comment + '\'' +
+                ", domain='" + domain + '\'' +
+                ", maxAge=" + maxAge +
+                ", name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                ", secure=" + secure +
+                ", value='" + value + '\'' +
+                ", version=" + version +
+                '}';
+    }
 }

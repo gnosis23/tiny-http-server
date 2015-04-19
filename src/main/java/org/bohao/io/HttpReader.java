@@ -158,6 +158,7 @@ public class HttpReader implements AutoCloseable {
             }
         }
 
+        logger.debug("cookie - {}", cookie);
         return cookie;
     }
 }

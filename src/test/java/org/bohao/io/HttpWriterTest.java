@@ -21,4 +21,15 @@ public class HttpWriterTest {
         Cookie cookie = new Cookie("sid", "4008123");
         Assert.assertTrue(writer.print(cookie).startsWith("Set-Cookie: sid=4008123"));
     }
+
+    @Test
+    public void testPrint2() throws Exception {
+        Cookie cookie = new Cookie("sid", "4008123");
+        cookie.setPath("/accounts");
+        cookie.setDomain(".bili.tv");
+
+        System.out.println(writer.print(cookie));
+        Assert.assertTrue(writer.print(cookie).startsWith("Set-Cookie: sid=4008123"));
+        Assert.assertTrue(writer.print(cookie).endsWith("Path=/accounts; Domain=.bili.tv\r\n"));
+    }
 }

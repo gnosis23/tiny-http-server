@@ -70,7 +70,6 @@ public class HttpWriter implements AutoCloseable {
     }
 
     /**
-     *
      * @param str str -> bytes
      * @return bytes
      */
@@ -85,7 +84,18 @@ public class HttpWriter implements AutoCloseable {
      * @return print cookie
      */
     protected String print(Cookie cookie) {
-        return String.format("Set-Cookie: %s=%s; expires=%s\r\n", cookie.getName(),
+        String str = String.format("Set-Cookie: %s=%s; expires=%s", cookie.getName(),
                 cookie.getValue(), TimeUtils.nDaysLater(1));
+        StringBuilder sb = new StringBuilder(str);
+
+        if (cookie.getPath() != null) {
+            sb.append("; Path=").append(cookie.getPath());
+        }
+        if (cookie.getDomain() != null) {
+            sb.append("; Domain=").append(cookie.getDomain());
+        }
+
+        sb.append("\r\n");
+        return sb.toString();
     }
 }
