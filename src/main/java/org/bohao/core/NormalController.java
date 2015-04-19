@@ -5,6 +5,7 @@ import org.bohao.annotation.RequestMapping;
 import org.bohao.entt.Cookie;
 import org.bohao.proto.HttpRequest;
 import org.bohao.proto.HttpResponse;
+import org.bohao.proto.HttpSession;
 import org.bohao.utils.FileToStr;
 import org.bohao.utils.TimeUtils;
 import org.bohao.utils.UrlTools;
@@ -117,6 +118,39 @@ public class NormalController {
 
         cookie.setValue(String.valueOf(Integer.valueOf(cookie.getValue()) + 1));
         response.addCookie(cookie);
+
+        response.setContent(ans);
+    }
+
+    /**
+     * session test
+     */
+    @RequestMapping(value = "/html/session")
+    public void doGet5(HttpRequest request, HttpResponse response) {
+        response.setStatus(200);
+
+        DateTime now = new DateTime();
+        response.setAttribute("Date", TimeUtils.getServerTime());
+        response.setAttribute("Content-Type", "text/html");
+        response.setAttribute("Connection", "keep-alive");
+        response.setAttribute("Server", "Bengine");
+        response.setAttribute("Last-Modified", response.getHeader("Date"));
+        // 特殊用，测试
+        response.setAttribute("Btag", "get");
+
+        DateTime twoDays = now.plusDays(1);
+        response.setAttribute("Expires", TimeUtils.toHttpTime(twoDays));
+
+        logger.info(request.getContextPath());
+
+
+        HttpSession session = request.getSession();
+        int cnt = 0;
+        if (session != null) {
+            cnt = Integer.valueOf(session.getAttribute("cnt").toString()) + 1;
+            session.setAttribute("cnt", cnt);
+        }
+        String ans = String.format("<p>session[count=%d]</p>", cnt);
 
         response.setContent(ans);
     }

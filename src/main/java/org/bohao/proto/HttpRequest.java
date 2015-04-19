@@ -15,6 +15,7 @@ public class HttpRequest {
     private Map<String, String> headers = new HashMap<>();
     private String content = "";
     private List<Cookie> cookies;
+    private HttpSession session;
 
     public HttpRequest() {
 
@@ -55,7 +56,7 @@ public class HttpRequest {
     }
 
     /**
-     * @return 一般post请求的内容
+     * @return normal post content
      */
     public String getContent() {
         return content;
@@ -71,5 +72,32 @@ public class HttpRequest {
 
     public List<Cookie> getCookies() {
         return cookies;
+    }
+
+    /**
+     * Returns the current HttpSession associated with this request or, if there is no current session
+     * and create is true, returns a new session.
+     *
+     * @param create true to create a new session for this request if necessary;
+     *               false to return null if there's no current session
+     * @return the HttpSession associated with this request or null if create is false and the request
+     * has no valid session
+     */
+    public HttpSession getSession(boolean create) {
+//        if (create && session == null) {
+//            //create
+//        }
+
+        return session;
+    }
+
+    public HttpSession getSession() {
+        // create if null
+
+        return session;
+    }
+
+    public void setSession(HttpSession session) {
+        this.session = session;
     }
 }
